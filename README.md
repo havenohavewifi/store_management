@@ -6,5 +6,6 @@ after compiling there is a "filestorage"
 //procedure  
 $ make  
 $ ./filestorage 
+
 //remove .o files 
 $ make clean  
