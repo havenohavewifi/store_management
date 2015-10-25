@@ -7,5 +7,5 @@ after compiling there is a "filestorage"
 $ make  
 $ ./filestorage 
 
-//remove .o files 
-$ make clean  
+//remove .o files
+$ make clean
