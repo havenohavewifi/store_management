@@ -34,7 +34,10 @@
 #define P_UNEDIT	0
 #define ALLO_FAIL	-1
 
-struct Segment 
+#define NAMELENGTH  32
+#define ATTRIBUTENUM  10
+
+struct Segment
 {
 	long fid;					//	该Segment属于哪个文件，即每段只属于一个表（存在较大空间浪费）
 	long count;					//	该Segment中记录了多少个页
@@ -43,11 +46,30 @@ struct Segment
 	long pageNo[PAGE_PER_SEGMENT];	//	记录每一个页的页号
 };
 
+struct attributeDefine
+{
+	char attributeName[NAMELENGTH];//属性名
+	int type;//整型、字符型、日期型
+	int length;//属性长度
+	int recordDeviation;//记录内偏移
+};
+
+struct relationDefine
+{
+	char relationName[NAMELENGTH];//关系名
+	char constructor[NAMELENGTH];//建立者
+	int attributeNum;//属性个数
+	int recordLength;//记录长度
+	int recordNum;//记录总数
+	struct attributeDefine attribute[ATTRIBUTENUM];//属性定义指针
+};
+
 struct FileDesc
 {
 	long fileID;				//	文件的标识
 	long fileAddr;				//	文件的Segment地址值（Segment用链表串连）
 	long filePageNum;			//	文件占用多少页
+	struct relationDefine relationDef; //  表的定义
 };
 
 struct SysDesc
@@ -72,7 +94,7 @@ struct SysDesc
 
 struct buffMap
 {
-    long pageNo;					//	该缓冲区块中存储的数据文件的页号
+	long pageNo;					//	该缓冲区块中存储的数据文件的页号
 	long loadTime;					//	读入缓冲区的时间
 	long vstTime;					//	访问该缓冲区块的时间
 	int edit;						//	该缓冲区块中的数据是否被修改
@@ -80,11 +102,18 @@ struct buffMap
 
 struct buffSpace
 {
-	 /*
-		应该动态分配缓冲区数据的空间
-		因为这样静态分配能分配到的空间太小
+	/*
+	应该动态分配缓冲区数据的空间
+	因为这样静态分配能分配到的空间太小
 	*/
 	char data[SIZE_BUFF][SIZE_PER_PAGE];	//	缓冲区数据块，目前设置SIZE_BUFF块，每一块的大小为页的大小	
 	struct buffMap map[SIZE_BUFF];			//	记录每一个缓冲区块的信息
 	long curTimeStamp;						//	目前的相对时间戳
 };
+
+typedef struct
+{
+	int year;
+	int month;
+	int day;
+} date;
